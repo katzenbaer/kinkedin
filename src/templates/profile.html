@@ -10,6 +10,11 @@
   {{ parent() }}
 {% endblock %}
 
+{% block css %}
+	{{ parent() }}
+	<link href="css/profile.css" rel="stylesheet">
+{% endblock %}
+
 {% block subnav %}
 	<p>Something something.</p>
 {% endblock %}
@@ -17,28 +22,58 @@
 {% block content %}
 <div class="row">
 	<div class="col-xs-3">
-		<img src="images/people/blank.jpg" class="img-responsive" alt="Riley Reid's Profile Picture">
+		{% if user.Profile().Picture() != null %}
+			{% set pictureUrl = "images/people/#{user.Profile().Picture()}" %}
+		{% else %}
+			{% set pictureUrl = 'images/people/blank.jpg' %}
+		{% endif %}
+		<img src="{{ pictureUrl }}" class="img-responsive ki-profile-pic" alt="{{ user.FullName() }}'s Profile Picture">
 	</div>
 	<div class="col-xs-9">
 		<h1>{{ user.FullName() }} 
 		{% if user.Email() == session.Email() %}
-			<a id="btn-profile-edit" class="btn btn-primary" href="editprofile.php" role="button"><span class="glyphicon glyphicon-pencil"></span> Edit Profile</a>
+			<a id="btn-profile-edit" class="btn btn-primary" href="#" role="button"><span class="glyphicon glyphicon-pencil"></span> Edit Profile</a>
 			<a id="btn-profile-done-editing" class="btn btn-success hidden" href="#" role="button"><span class="glyphicon glyphicon-ok"></span> Done Editing</a>
 		{% else %}
 			{% if user.hasConnection(session.Email()) %}
-				<a id="btn-profile-connected" class="btn btn-success" href="editprofile.php" role="button"><span class="glyphicon glyphicon-star"></span> Connected</a>
+				<a id="btn-profile-connected" class="btn btn-success" href="#" role="button"><span class="glyphicon glyphicon-star"></span> You are connected</a>
 			{% elseif user.hasConnection(session.Email(), 'pending') or user.hasConnection(session.Email(), 'rejected') %}
-				<a id="btn-profile-pending" class="btn btn-warning" href="editprofile.php" role="button"><span class="glyphicon glyphicon-time"></span> Request Pending</a>
+				<a id="btn-profile-pending" class="btn btn-warning" href="#" role="button"><span class="glyphicon glyphicon-time"></span> Request Pending</a>
 			{% else %}
-				<a id="btn-profile-request" class="btn btn-primary" href="editprofile.php" role="button"><span class="glyphicon glyphicon-envelope"></span> Send Request</a>
+				<a id="btn-profile-request" class="btn btn-primary" href="#" role="button"><span class="glyphicon glyphicon-user"></span> Send Request</a>
 			{% endif %}
+			<a id="btn-profile-message" class="btn btn-primary" href="message.php?to={{ user.Id() }}" role="button"><span class="glyphicon glyphicon-envelope"></span> Send Message</a>
 		{% endif %}
 		<input id="profile-userid" type="hidden" value="{{ user.Id() }}">
 		</h1>
-		<h2><span id="profile-title">{{ user.Profile().Title() }}</span></h2>
-		<h4>Aliases: <span id="profile-aliases">{{ user.Profile().Aliases() }}</span></h4>
+		<h2>
+			<span id="profile-title">{{ user.Profile().Title() }}</span>
+			<input id="profile-title-input" type="text" class="form-control hidden" placeholder="Enter Title">
+		</h2>
+		<h4>
+			<span id="profile-aliases-label">Aliases: </span>
+			<span id="profile-aliases">{{ user.Profile().Aliases() }}</span>
+			<input id="profile-aliases-input" type="text" class="form-control hidden" placeholder="Enter Aliases">
+		</h4>
 		
-		<p>Website: <span id="profile-website">{{ user.Profile().Website() }}</span>, Twitter: @<span id="profile-twitter">{{ user.Profile().Twitter() }}</span></p>
+		<span class="row">
+			<span class="col-xs-6">
+				<span id="profile-website-label"><span class="glyphicon glyphicon-globe"></span> </span>
+				<span id="profile-website">{{ user.Profile().Website() }}</span>
+				<div id="profile-website-input" class="input-group hidden">
+					<span class="input-group-addon"><span class="glyphicon glyphicon-globe"></span></span>
+					<input type="text" class="form-control" placeholder="Enter Website">
+				</div>
+			</span>
+			<span class="col-xs-6">
+				<span id="profile-twitter-label">@</span>
+				<span id="profile-twitter">{{ user.Profile().Twitter() }}</span>
+				<div id="profile-twitter-input" class="input-group hidden">
+					<span class="input-group-addon">@</span>
+					<input type="text" class="form-control" placeholder="Enter Twitter">
+				</div>
+			</span>
+		</span>
 	</div>
 </div>
 <div class="row">
@@ -46,7 +81,12 @@
 		<h3 class="page-header">Connections</h3>
 		<p>
 			{% for user in user.Connections() %}
-				<a href="profile.php?u={{ user.Id() }}"><img src="images/people/blank.jpg" style="width: 48px; height: 48px;" data-toggle="tooltip" data-placement="bottom" title="{{ user.FullName() }}"></a>
+				{% if user.Profile().Picture() != null %}
+					{% set pictureUrl = "images/people/#{user.Profile().Picture()}" %}
+				{% else %}
+					{% set pictureUrl = 'images/people/blank.jpg' %}
+				{% endif %}
+				<a href="profile.php?u={{ user.Id() }}"><img src="{{ pictureUrl }}" class="ki-thumbnail-pic" data-toggle="tooltip" data-placement="bottom" title="{{ user.FullName() }}" alt="{{ user.FullName() }}'s Profile Picture"></a>
 			{% endfor %}
 		</p>
 	</div>
@@ -56,19 +96,55 @@
 		<h3 class="page-header">Background</h3>
 	</div>
 	<div class="col-xs-4">
-		<p>Location: <span id="profile-location">{{ user.Profile().Location() }}</span></p>
-		<p>Date of Birth: <span id="profile-dob">{{ user.Profile().DateOfBirth() }}</span></p>
-		<p>Starting Year: <span id="profile-debut">{{ user.Profile().Debut() }}</span></p>
+		<p>
+			<span id="profile-location-label">Location: </span>
+			<span id="profile-location">{{ user.Profile().Location() }}</span>
+			<input id="profile-location-input" type="text" class="form-control hidden" placeholder="Enter Location">
+		</p>
+		<p>
+			<span id="profile-dob-label">Date of Birth: </span>
+			<span id="profile-dob">{{ user.Profile().DateOfBirth() }}</span>
+			<input id="profile-dob-input" type="text" class="form-control hidden" placeholder="Enter Date of Birth">
+		</p>
+		<p>
+			<span id="profile-debut-label">Starting Year: </span>
+			<span id="profile-debut">{{ user.Profile().Debut() }}</span>
+			<input id="profile-debut-input" type="text" class="form-control hidden" placeholder="Enter Debut">
+		</p>
 	</div>
 	<div class="col-xs-4">
-		<p>Measurements: <span id="profile-measurements">{{ user.Profile().Measurements() }}</span></p>
-		<p>Height: <span id="profile-height">{{ user.Profile().Height() }}</span></p>
-		<p>Eyes Color: <span id="profile-eyescolor">{{ user.Profile().EyesColor() }}</span></p>
-		<p>Hair Color: <span id="profile-haircolor">{{ user.Profile().HairColor() }}</span></p>
+		<p>
+			<span id="profile-measurements-label">Measurements: </span>
+			<span id="profile-measurements">{{ user.Profile().Measurements() }}</span>
+			<input id="profile-measurements-input" type="text" class="form-control hidden" placeholder="Enter Measurements">
+		</p>
+		<p>
+			<span id="profile-height-label">Height: </span>
+			<span id="profile-height">{{ user.Profile().Height() }}</span>
+			<input id="profile-height-input" type="text" class="form-control hidden" placeholder="Enter Height">
+		</p>
+		<p>
+			<span id="profile-eyescolor-label">Eyes Color: </span>
+			<span id="profile-eyescolor">{{ user.Profile().EyesColor() }}</span>
+			<input id="profile-eyescolor-input" type="text" class="form-control hidden" placeholder="Enter Eyes Color">
+		</p>
+		<p>
+			<span id="profile-haircolor-label">Hair Color: </span>
+			<span id="profile-haircolor">{{ user.Profile().HairColor() }}</span>
+			<input id="profile-haircolor-input" type="text" class="form-control hidden" placeholder="Enter Hair Color">
+		</p>
 	</div>
 	<div class="col-xs-4">
-		<p>Race: <span id="profile-race">{{ user.Profile().Race() }}</span></p>
-		<p>Ethnic Origin: <span id="profile-ethnicity">{{ user.Profile().Ethnicity() }}</span></p>
+		<p>
+			<span id="profile-race-label">Race: </span>
+			<span id="profile-race">{{ user.Profile().Race() }}</span>
+			<input id="profile-race-input" type="text" class="form-control hidden" placeholder="Enter Race">
+		</p>
+		<p>
+			<span id="profile-ethnicity-label">Ethnic Origin: </span>
+			<span id="profile-ethnicity">{{ user.Profile().Ethnicity() }}</span>
+			<input id="profile-ethnicity-input" type="text" class="form-control hidden" placeholder="Enter Ethnicity">
+		</p>
 	</div>
 </div>
 <div class="row">

@@ -76,10 +76,9 @@ class User {
 	 */
 	function getProfile() {
 		if ($this->profile == NULL) {
-			$this->profile = new UserProfile($this->mysqli, $this->getEmail());
-		} else {
-			return $this->profile;
+			$this->profile = new UserProfile($this->mysqli, $this->getEmail(), $this->getId());
 		}
+		return $this->profile;
 	}
 	
 	/**
