@@ -1,0 +1,113 @@
+{% extends "_base.html" %}
+
+{% block js %}
+	{{ parent() }}
+	<script src="js/global.js"></script>
+	<script src="js/profile.js"></script>
+{% endblock %}
+
+{% block title %}World&apos;s Most Inclusive Professional Network{% endblock %}
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block subnav %}
+	<p>Something something.</p>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-xs-3">
+		<img src="images/people/blank.jpg" class="img-responsive" alt="Riley Reid's Profile Picture">
+	</div>
+	<div class="col-xs-9">
+		<h1>{{ user.FullName() }} <a class="btn btn-primary" href="editprofile.php" role="button">Edit Profile</a></h1>
+		<h2>{{ user.profile.Title() }}</h2>
+		<h4>Aliases: {{ user.profile.Aliases() }}</h4>
+		
+		<p>Website: {{ user.profile.Website() }}, Twitter: @{{ user.profile.Twitter() }}</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="page-header">Connections</h3>
+		<p>
+			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
+			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
+			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
+			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
+			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
+		</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="page-header">Background</h3>
+	</div>
+	<div class="col-xs-4">
+		<p>Location: {{ user.profile.Location() }}</p>
+		<p>Date of Birth: {{ user.profile.DateOfBirth() }} (23 years old)</p>
+		<p>Starting Year: {{ user.profile.Debut() }} (approximately 20 years old)</p>
+	</div>
+	<div class="col-xs-4">
+		<p>Measurements: {{ user.profile.Measurements() }}</p>
+		<p>Height: {{ user.profile.Height() }}</p>
+		<p>Eyes Color: {{ user.profile.EyesColor() }}</p>
+		<p>Hair Color: {{ user.profile.HairColor() }}</p>
+	</div>
+	<div class="col-xs-4">
+		<p>Race: {{ user.profile.Race() }}</p>
+		<p>Ethnic Origin: {{ user.profile.Ethnicity() }}</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="page-header">Work Experience</h3>
+	</div>
+	<div class="col-xs-12">
+		<h4>Jules Jordan Video</h4>
+		<h4 style="color:gray">15 films from 2011 - Present</h4>
+		<p>Interracial, Cum Shots, Threesomes, Oral, Gangbang, Gonzo, Orgy, Squirting, All Sex, Young</p>
+	</div>
+	<div class="col-xs-12">
+		<h4>Evil Angel</h4>
+		<h4 style="color:gray">3 films from 2014</h4>
+		<p>Oral, Cum Shots, Compilation, POV, Vignettes</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>Year</th>
+					<th>Length</th>
+					<th>Category</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Cum Crossfire</td>
+					<td>2014</td>
+					<td>146</td>
+					<td>Oral, Cum Shots</td>
+				</tr>
+				<tr>
+					<td>Oral Overdose</td>
+					<td>2014</td>
+					<td>326</td>
+					<td>Oral, Compilation, POV</td>
+				</tr>
+				<tr>
+					<td>Penis Pixies</td>
+					<td>2014</td>
+					<td>166</td>
+					<td>Vignettes</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="page-header">Skills</h3>
+	</div>
+</div>
+{% endblock %}
