@@ -23,7 +23,7 @@
     <div class="container">
       <nav class="blog-nav">
         <a id="nav-home" class="blog-nav-item" href="index.php">Home</a>
-        <a id="nav-profile" class="blog-nav-item" href="profile.php">Profile</a>
+        <a id="nav-profile" class="blog-nav-item" href="profile.php?u={{ session.User().Id() }}">Profile</a>
         <a id="nav-connections" class="blog-nav-item" href="connections.php">Connections</a>
         <a id="nav-jobs" class="blog-nav-item" href="jobs.php">Jobs</a>
         <a id="nav-interests" class="blog-nav-item" href="interests.php">Interests</a>
@@ -57,6 +57,7 @@
 	{% block js %}
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	    <script src="js/bootstrap.min.js"></script>
+			<script src="js/global.js"></script>
 	{% endblock %}
 </body>
 </html>

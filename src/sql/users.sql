@@ -15,5 +15,6 @@ INSERT INTO `users` (`email`, `first_name`, `last_name`, `password`)
 VALUES ('riley@reid.com', 'Riley', 'Reid', SHA('test123')),
 	('mark@twain.com', 'Mark', 'Twain', SHA('password123')),
 	('james@deen.com', 'James', 'Deen', SHA('test123')),
-	('hugh@playboy.com', 'Hugh', 'Hefner', SHA('test123'));
+	('hugh@playboy.com', 'Hugh', 'Hefner', SHA('test123')),
+	('miley@cyrus.com', 'Miley', 'Cyrus', SHA('test123'));
 	

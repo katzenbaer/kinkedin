@@ -11,4 +11,18 @@ class WebRequest {
 		return !self::isAjaxRequest();
 	}
 }
+
+class Alerter {
+	public static function setSuccessMessage($msg) {
+		$_SESSION['success_message'] = $msg;
+	}
+	
+	public static function setErrorMessage($msg) {
+		$_SESSION['error_message'] = $msg;
+	}
+	
+	public static function setInfoMessage($msg) {
+		$_SESSION['info_message'] = $msg;
+	}
+}
 ?>

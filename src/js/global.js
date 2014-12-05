@@ -1,3 +1,10 @@
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
 $('#nav-logout').click(function() {
 	var request = $.ajax({
 	  url: "actions/logout.php",
@@ -16,4 +23,6 @@ $('#nav-logout').click(function() {
 	request.fail(function( jqXHR, textStatus ) {
 	  alert( "Request failed: " + textStatus );
 	});
+	
+	return false;
 });

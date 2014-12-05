@@ -2,7 +2,6 @@
 
 {% block js %}
 	{{ parent() }}
-	<script src="js/global.js"></script>
 	<script src="js/profile.js"></script>
 {% endblock %}
 
@@ -23,31 +22,32 @@
 	<div class="col-xs-9">
 		<h1>{{ user.FullName() }} 
 		{% if user.Email() == session.Email() %}
-			<a class="btn btn-primary" href="editprofile.php" role="button">Edit Profile</a></h1>
+			<a id="btn-profile-edit" class="btn btn-primary" href="editprofile.php" role="button"><span class="glyphicon glyphicon-pencil"></span> Edit Profile</a>
+			<a id="btn-profile-done-editing" class="btn btn-success hidden" href="#" role="button"><span class="glyphicon glyphicon-ok"></span> Done Editing</a>
 		{% else %}
 			{% if user.hasConnection(session.Email()) %}
-				<a class="btn btn-primary" href="editprofile.php" role="button">Connected</a></h1>
-			{% elseif user.hasConnection(session.Email(), 'pending') %}
-				<a class="btn btn-primary" href="editprofile.php" role="button">Request Pending</a></h1>
+				<a id="btn-profile-connected" class="btn btn-success" href="editprofile.php" role="button"><span class="glyphicon glyphicon-star"></span> Connected</a>
+			{% elseif user.hasConnection(session.Email(), 'pending') or user.hasConnection(session.Email(), 'rejected') %}
+				<a id="btn-profile-pending" class="btn btn-warning" href="editprofile.php" role="button"><span class="glyphicon glyphicon-time"></span> Request Pending</a>
 			{% else %}
-				<a class="btn btn-primary" href="editprofile.php" role="button">Send Request</a></h1>
+				<a id="btn-profile-request" class="btn btn-primary" href="editprofile.php" role="button"><span class="glyphicon glyphicon-envelope"></span> Send Request</a>
 			{% endif %}
 		{% endif %}
-		<h2>{{ user.profile.Title() }}</h2>
-		<h4>Aliases: {{ user.profile.Aliases() }}</h4>
+		<input id="profile-userid" type="hidden" value="{{ user.Id() }}">
+		</h1>
+		<h2><span id="profile-title">{{ user.Profile().Title() }}</span></h2>
+		<h4>Aliases: <span id="profile-aliases">{{ user.Profile().Aliases() }}</span></h4>
 		
-		<p>Website: {{ user.profile.Website() }}, Twitter: @{{ user.profile.Twitter() }}</p>
+		<p>Website: <span id="profile-website">{{ user.Profile().Website() }}</span>, Twitter: @<span id="profile-twitter">{{ user.Profile().Twitter() }}</span></p>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12">
 		<h3 class="page-header">Connections</h3>
 		<p>
-			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
-			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
-			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
-			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
-			<img src="images/people/blank.jpg" style="width: 48px; height: 48px;">
+			{% for user in user.Connections() %}
+				<a href="profile.php?u={{ user.Id() }}"><img src="images/people/blank.jpg" style="width: 48px; height: 48px;" data-toggle="tooltip" data-placement="bottom" title="{{ user.FullName() }}"></a>
+			{% endfor %}
 		</p>
 	</div>
 </div>
@@ -56,19 +56,19 @@
 		<h3 class="page-header">Background</h3>
 	</div>
 	<div class="col-xs-4">
-		<p>Location: {{ user.profile.Location() }}</p>
-		<p>Date of Birth: {{ user.profile.DateOfBirth() }} (23 years old)</p>
-		<p>Starting Year: {{ user.profile.Debut() }} (approximately 20 years old)</p>
+		<p>Location: <span id="profile-location">{{ user.Profile().Location() }}</span></p>
+		<p>Date of Birth: <span id="profile-dob">{{ user.Profile().DateOfBirth() }}</span></p>
+		<p>Starting Year: <span id="profile-debut">{{ user.Profile().Debut() }}</span></p>
 	</div>
 	<div class="col-xs-4">
-		<p>Measurements: {{ user.profile.Measurements() }}</p>
-		<p>Height: {{ user.profile.Height() }}</p>
-		<p>Eyes Color: {{ user.profile.EyesColor() }}</p>
-		<p>Hair Color: {{ user.profile.HairColor() }}</p>
+		<p>Measurements: <span id="profile-measurements">{{ user.Profile().Measurements() }}</span></p>
+		<p>Height: <span id="profile-height">{{ user.Profile().Height() }}</span></p>
+		<p>Eyes Color: <span id="profile-eyescolor">{{ user.Profile().EyesColor() }}</span></p>
+		<p>Hair Color: <span id="profile-haircolor">{{ user.Profile().HairColor() }}</span></p>
 	</div>
 	<div class="col-xs-4">
-		<p>Race: {{ user.profile.Race() }}</p>
-		<p>Ethnic Origin: {{ user.profile.Ethnicity() }}</p>
+		<p>Race: <span id="profile-race">{{ user.Profile().Race() }}</span></p>
+		<p>Ethnic Origin: <span id="profile-ethnicity">{{ user.Profile().Ethnicity() }}</span></p>
 	</div>
 </div>
 <div class="row">

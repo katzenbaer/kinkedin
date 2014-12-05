@@ -18,10 +18,11 @@ function indexPage() {
 	/*if (isset($_POST['login_email']) && isset($_POST['login_password'])) {
 		$user = User::authenticate($_POST['login_email'], $_POST['login_password']);
 	}*/
-
-	if (Session::isLoggedIn()) {
+		
+	$session = new Session();
+	if ($session->isLoggedIn()) {
 		echo $twig->render('index.html', array(
-		    'user' => $user,
+				'session' => $session
 		));	
 	} else {
 		echo $twig->render('landing.html');

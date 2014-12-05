@@ -1,7 +1,3 @@
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
-
 $('#loginForm').submit(function(e) {
 	e.preventDefault(); // don't actually submit the form.
 	

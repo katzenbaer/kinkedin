@@ -10,11 +10,10 @@ class UserDoesNotExistException extends Exception {}
 class User {
 	public $mysqli;
 	private $id, $email, $firstName, $lastName, $password;
-	public $profile;
+	private $profile = NULL;
 	
 	function User($mysqli, $id, $email, $firstName, $lastName, $password) {
 		$this->mysqli = $mysqli;
-		$this->profile = new UserProfile($mysqli, $email);
 		
 		$this->id = $id;
 		$this->email = $email;
@@ -72,6 +71,18 @@ class User {
 	}
 	
 	/**
+	 * Returns the user's profile.
+	 * @return UserProfile
+	 */
+	function getProfile() {
+		if ($this->profile == NULL) {
+			$this->profile = new UserProfile($this->mysqli, $this->getEmail());
+		} else {
+			return $this->profile;
+		}
+	}
+	
+	/**
 	 * Returns whether this user is connected to another user.
 	 * @return Boolean
 	 */
@@ -112,6 +123,95 @@ SQL;
 			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
 		}
 	}
+	
+	/**
+	 * Sends a Connection request to a user with toUserId.
+	 * @return Boolean whether the request was successful.
+	 */
+	function request($toUserId) {
+		$otherUser = (new Users($this->mysqli))->findById($toUserId);
+		if ($otherUser == NULL) {
+			throw new UserDoesNotExistException();
+		}
+		
+		if ($this->getId() < $toUserId) {
+			$firstId = $this->getId();
+			$secondId = $toUserId;
+		} else {
+			$firstId = $toUserId;
+			$secondId = $this->getId();
+		}
+		
+		$stmt = <<<SQL
+INSERT INTO `connections` (`to_user`, `from_user`, `status`, `timestamp`)
+VALUES (?, ?, 'pending', UNIX_TIMESTAMP())
+SQL;
+		if ($stmt = $this->mysqli->prepare($stmt)) {
+			$stmt->bind_param('ii', $firstId, $secondId);
+			
+			if ($stmt->execute() === FALSE) {
+				return false;
+				die('unable to execute' . htmlspecialchars($this->mysqli->error));
+			}
+			return true;
+		} else {
+			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
+		}
+	}
+	
+	/**
+	 * Returns a list of Users that this user is connected with.
+	 * @return Array
+	 */
+	function getConnections($status = 'accepted', $limit = 10) {
+		$res = array();
+
+		// query where we are the to_user
+		$stmt = <<<SQL
+SELECT `id`, `email`, `first_name`, `last_name`, `password` FROM `connections`
+INNER JOIN `users` ON `connections`.`from_user` = `users`.`id`
+WHERE `status` = '{$status}' AND `to_user` = ?
+SQL;
+		if ($stmt = $this->mysqli->prepare($stmt)) {
+			$stmt->bind_param('i', $this->getId());
+			
+			if ($stmt->execute() === FALSE) {
+				die('unable to execute' . htmlspecialchars($this->mysqli->error));
+			}
+			
+			$stmt->bind_result($id, $email, $firstName, $lastName, $password);
+			while ($result = $stmt->fetch()) {
+				$res[] = new User($this->mysqli, $id, $email, $firstName, $lastName, $password);
+			}
+			$stmt->close();
+		} else {
+			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
+		}
+		
+		// query where we are the from_user
+		$stmt = <<<SQL
+SELECT `id`, `email`, `first_name`, `last_name`, `password` FROM `connections`
+INNER JOIN `users` ON `connections`.`to_user` = `users`.`id`
+WHERE `status` = '{$status}' AND `from_user` = ?
+SQL;
+		if ($stmt = $this->mysqli->prepare($stmt)) {
+			$stmt->bind_param('i', $this->getId());
+			
+			if ($stmt->execute() === FALSE) {
+				die('unable to execute' . htmlspecialchars($this->mysqli->error));
+			}
+			
+			$stmt->bind_result($id, $email, $firstName, $lastName, $password);
+			while ($result = $stmt->fetch()) {
+				$res[] = new User($this->mysqli, $id, $email, $firstName, $lastName, $password);
+			}
+			$stmt->close();
+		} else {
+			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
+		}
+		
+		return array_slice($res, 0, $limit);
+	}
 }
 
 class Users {
@@ -139,9 +239,9 @@ SQL;
 			
 			$stmt->bind_result($id, $email, $firstName, $lastName, $password);
 			if ($result = $stmt->fetch()) {
-				$stmt->close();
 				return new User($this->mysqli, $id, $email, $firstName, $lastName, $password);
 			}
+			$stmt->close();
 			return null;
 		} else {
 			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
@@ -165,9 +265,9 @@ SQL;
 			
 			$stmt->bind_result($id, $email, $firstName, $lastName, $password);
 			while ($result = $stmt->fetch()) {
-				$stmt->close();
 				return new User($this->mysqli, $id, $email, $firstName, $lastName, $password);
 			}
+			$stmt->close();
 			return null;
 		} else {
 			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
@@ -191,9 +291,9 @@ SQL;
 			
 			$stmt->bind_result($id, $email, $firstName, $lastName, $password);
 			while ($result = $stmt->fetch()) {
-				$stmt->close();
 				return new User($this->mysqli, $id, $email, $firstName, $lastName, $password);
 			}
+			$stmt->close();
 			return null;
 		} else {
 			die('unable to prepare the statement. ' . htmlspecialchars($this->mysqli->error));
