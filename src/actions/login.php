@@ -6,12 +6,12 @@ require_once __DIR__ . '/../classes/Session.php';
 require_once __DIR__ . '/../classes/User.php';
 
 class LoginAction {
-	private $mysql, $user, $session, $authentication;
+	private $mysql, $users, $session, $authentication;
 	function LoginAction() {
 		$this->mysql = MySQL::getConnection();
-		$this->user = new User($this->mysql);
+		$this->users = new Users($this->mysql);
 		$this->session = new Session();
-		$this->authentication = new Authentication($this->user, $this->session);
+		$this->authentication = new Authentication($this->users, $this->session);
 	}
 	
 	function login(&$message) {

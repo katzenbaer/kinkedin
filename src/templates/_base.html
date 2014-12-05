@@ -22,14 +22,14 @@
 	<div class="blog-masthead">
     <div class="container">
       <nav class="blog-nav">
-        <a class="blog-nav-item active" href="#">Home</a>
-        <a class="blog-nav-item" href="#">Profile</a>
-        <a class="blog-nav-item" href="#">Connections</a>
-        <a class="blog-nav-item" href="#">Jobs</a>
-        <a class="blog-nav-item" href="#">Interests</a>
+        <a id="nav-home" class="blog-nav-item" href="index.php">Home</a>
+        <a id="nav-profile" class="blog-nav-item" href="profile.php">Profile</a>
+        <a id="nav-connections" class="blog-nav-item" href="connections.php">Connections</a>
+        <a id="nav-jobs" class="blog-nav-item" href="jobs.php">Jobs</a>
+        <a id="nav-interests" class="blog-nav-item" href="interests.php">Interests</a>
 				<a class="blog-nav-item" style="width:40px"></a>
-        <a class="blog-nav-item" href="#"><span class="glyphicon glyphicon-envelope" /></a>
-        <a id="logout" class="blog-nav-item" href="#"><span class="glyphicon glyphicon-log-out" /></a>
+        <a id="nav-messages" class="blog-nav-item" href="messages.php"><span class="glyphicon glyphicon-envelope" /></a>
+        <a id="nav-logout" class="blog-nav-item" href="logout.php"><span class="glyphicon glyphicon-log-out" /></a>
       </nav>
     </div>
   </div>
@@ -48,7 +48,7 @@
 	<footer class="blog-footer">
 		{% block footer %}
 			&copy; Copyright 2014 by Terrence Katzenbaer (tkatzen).
-	    <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+	    <p>Based on Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
 		{% endblock %}
     <p>
       <a href="#">Back to top</a>

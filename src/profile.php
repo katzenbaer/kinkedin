@@ -10,7 +10,7 @@ foreach ($dependencies as $dependency) {
 	require_once __DIR__ . $dependency;
 }
 
-function indexPage() {
+function profilePage() {
 	$loader = new Twig_Loader_Filesystem(__DIR__ . '/templates');
 	$twig = new Twig_Environment($loader, array(
 	  // options here
@@ -18,16 +18,18 @@ function indexPage() {
 
 	$userId = $_GET['u'];
 	$user = (new Users(MySQL::getConnection()))->findById($userId);
+	$session = new Session();
 
 	if (Session::isLoggedIn()) {
 		echo $twig->render('profile.html', array(
 		    'user' => $user,
+				'session' => $session,
 		));	
 	} else {
 		echo $twig->render('landing.html');
 	}
 }
 
-indexPage();
+profilePage();
 
 ?>

@@ -6,6 +6,10 @@ class Session {
 		
 	}
 	
+	function getEmail() {
+		return $_SESSION['email'];
+	}
+	
 	function isLoggedIn() {
 		return isset($_SESSION['email']);
 	}

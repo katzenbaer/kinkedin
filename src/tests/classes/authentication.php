@@ -5,16 +5,16 @@ require_once __DIR__ . '/../../classes/Session.php';
 require_once __DIR__ . '/../../classes/User.php';
 
 Mock::generate('Session');
-Mock::generate('User');
+Mock::generate('Users');
 
 class AuthenticationClassTest extends UnitTestCase {
-	var $mockSession, $mockUser;
+	var $mockSession, $mockUsers;
 	var $authentication;
 	
 	function setUp() {
 		$this->mockSession = new MockSession();
-		$this->mockUser = new MockUser();
-		$this->authentication = new Authentication($this->mockUser, $this->mockSession);
+		$this->mockUsers = new MockUsers();
+		$this->authentication = new Authentication($this->mockUsers, $this->mockSession);
 	}
 	function tearDown() { }
 	
@@ -22,10 +22,10 @@ class AuthenticationClassTest extends UnitTestCase {
 		// Arrange
 		$email = 'foo@foo.com';
 		$pass = 'bar';
-		$this->mockUser->returns('authenticate', true, array($email, $pass));
+		$this->mockUsers->returns('authenticate', true, array($email, $pass));
 		
 		// Expect
-		$this->mockUser->expectOnce('authenticate', array($email, $pass));
+		$this->mockUsers->expectOnce('authenticate', array($email, $pass));
 		$this->mockSession->expectOnce('establish', array($email));
 		
 		// Act
@@ -40,10 +40,10 @@ class AuthenticationClassTest extends UnitTestCase {
 		// Arrange
 		$email = 'foo@foo.com';
 		$pass = 'bar';
-		$this->mockUser->returns('authenticate', false, array($email, $pass));
+		$this->mockUsers->returns('authenticate', false, array($email, $pass));
 		
 		// Expect
-		$this->mockUser->expectOnce('authenticate', array($email, $pass));
+		$this->mockUsers->expectOnce('authenticate', array($email, $pass));
 		$this->mockSession->expectNever('establish', array($email));
 		
 		// Act
@@ -58,10 +58,10 @@ class AuthenticationClassTest extends UnitTestCase {
 		// Arrange
 		$email = 'foo@foo.com';
 		$pass = 'bar';
-		$this->mockUser->throwOn('authenticate', new Exception());
+		$this->mockUsers->throwOn('authenticate', new Exception());
 		
 		// Expect
-		$this->mockUser->expectOnce('authenticate', array($email, $pass));
+		$this->mockUsers->expectOnce('authenticate', array($email, $pass));
 		$this->mockSession->expectNever('establish', array($email));
 		
 		// Act
@@ -71,6 +71,8 @@ class AuthenticationClassTest extends UnitTestCase {
 		$this->assertFalse($result);
 		$this->assertEqual($message, 'A problem occured.');
   }
+	
+	// @TODO: Write tests for sign-up
 	
 }
 ?>

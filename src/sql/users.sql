@@ -12,7 +12,8 @@ CREATE TABLE `users` (
 );
 
 INSERT INTO `users` (`email`, `first_name`, `last_name`, `password`) 
-VALUES ('john@doe.com', 'John', 'Doe', SHA('test123')),
+VALUES ('riley@reid.com', 'Riley', 'Reid', SHA('test123')),
 	('mark@twain.com', 'Mark', 'Twain', SHA('password123')),
-	('james@deen.com', 'James', 'Deen', SHA('test123'));
+	('james@deen.com', 'James', 'Deen', SHA('test123')),
+	('hugh@playboy.com', 'Hugh', 'Hefner', SHA('test123'));
 	

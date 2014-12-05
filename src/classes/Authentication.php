@@ -3,17 +3,17 @@ require_once __DIR__ . '/User.php';
 require_once __DIR__ . '/Session.php';
 
 class Authentication {
-	private $user, $session;
+	private $users, $session;
 	
-	function Authentication($user, $session) {
-		$this->user = $user;
+	function Authentication($users, $session) {
+		$this->users = $users;
 		$this->session = $session;
 	}
 	
 	function login($email, $password, &$message) {
 		$message = NULL;
 		try {
-			if ($this->user->authenticate($email, $password) === true) {
+			if ($this->users->authenticate($email, $password) === true) {
 				$this->session->establish($email);
 				return true;
 		 	} else {
@@ -29,12 +29,12 @@ class Authentication {
 		$errors = array();
 		$errorMessage = NULL;
 		try {	
-			if ($this->user->register($form) === true) {
+			if ($this->users->register($form) === true) {
 				$this->session->establish($form['email']);
 			}
 			return true;
 		} catch (EmptyFieldException $e) {
-			$errors = $this->user->registerEmptyFields($form);
+			$errors = $this->users->registerEmptyFields($form);
 		} catch (PasswordLengthException $e) {
 			$errorMessage = 'Your password must be at least 6 characters in length.';
 		} catch (UserAlreadyExistsException $e) {

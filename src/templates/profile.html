@@ -21,7 +21,18 @@
 		<img src="images/people/blank.jpg" class="img-responsive" alt="Riley Reid's Profile Picture">
 	</div>
 	<div class="col-xs-9">
-		<h1>{{ user.FullName() }} <a class="btn btn-primary" href="editprofile.php" role="button">Edit Profile</a></h1>
+		<h1>{{ user.FullName() }} 
+		{% if user.Email() == session.Email() %}
+			<a class="btn btn-primary" href="editprofile.php" role="button">Edit Profile</a></h1>
+		{% else %}
+			{% if user.hasConnection(session.Email()) %}
+				<a class="btn btn-primary" href="editprofile.php" role="button">Connected</a></h1>
+			{% elseif user.hasConnection(session.Email(), 'pending') %}
+				<a class="btn btn-primary" href="editprofile.php" role="button">Request Pending</a></h1>
+			{% else %}
+				<a class="btn btn-primary" href="editprofile.php" role="button">Send Request</a></h1>
+			{% endif %}
+		{% endif %}
 		<h2>{{ user.profile.Title() }}</h2>
 		<h4>Aliases: {{ user.profile.Aliases() }}</h4>
 		

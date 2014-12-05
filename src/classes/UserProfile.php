@@ -122,7 +122,6 @@ class UserProfile {
 SELECT `attribute`, `value` FROM `profile`
 INNER JOIN `users` ON `users`.`id` = `profile`.`user_id`
 WHERE `users`.`email` = ?
-GROUP BY `attribute`
 ORDER BY `timestamp` DESC
 SQL;
 		if ($stmt = $this->mysqli->prepare($stmt)) {
